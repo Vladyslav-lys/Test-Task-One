@@ -39,4 +39,12 @@ public class StringValidator {
             throw new Exception(errorText);
         }
     }
+
+    public void isRightPhoneFormat(String value) throws Exception {
+        if(!value.matches("^\\(([0-9]{3})\\)-([0-9]{3})-([0-9]{4})$")) {
+            String errorText = "Incorrect phone number format";
+            Log.d("ErrorPhone", errorText);
+            throw new Exception(errorText);
+        }
+    }
 }

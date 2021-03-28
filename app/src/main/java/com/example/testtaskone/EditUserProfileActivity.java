@@ -10,6 +10,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.testtaskone.adapters.SavedUsersDatabaseAdapter;
 import com.example.testtaskone.entities.User;
+import com.example.testtaskone.helpers.PhoneTextWatcher;
 import com.example.testtaskone.helpers.SavedUsersDatabaseHelper;
 import com.example.testtaskone.validators.StringValidator;
 
@@ -43,6 +46,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
         lastNameBox = (EditText) findViewById(R.id.editTextLastName);
         emailBox = (EditText) findViewById(R.id.editTextEmail);
         phoneBox = (EditText) findViewById(R.id.editTextPhone);
+        phoneBox.addTextChangedListener(new PhoneTextWatcher(phoneBox, "(###)-###-####"));
         adapter = new SavedUsersDatabaseAdapter(this);
 
         firstNameBox.setOnFocusChangeListener(this);
@@ -113,6 +117,9 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
                 if(textBox.getTag().equals("e-mail")) {
                     stringValidator.isRightEmail(textBox.getText().toString());
                 }
+                if(textBox.getTag().equals("phone")) {
+                    stringValidator.isRightPhoneFormat(textBox.getText().toString());
+                }
             }
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG);
@@ -154,6 +161,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
                 stringValidator.isOnlySpace(values[i]);
             }
             stringValidator.isRightEmail(email);
+            stringValidator.isRightPhoneFormat(phone);
 
             adapter.open();
             if (userId > 0) {
